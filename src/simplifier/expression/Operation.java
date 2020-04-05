@@ -36,6 +36,7 @@ public enum Operation {
     public boolean isBooleanMath() {
         return stringFormat.equals("|") || stringFormat.equals("&");
     }
+
     /**
      * Get {@link Operation} appropriate given char
      * @param c target to find {@link Operation}

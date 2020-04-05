@@ -3,7 +3,6 @@ package test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import simplifier.ChainSimplifier;
 import simplifier.chain.Chain;
 import simplifier.chain.FilterCall;
 import simplifier.chain.MapCall;
@@ -18,7 +17,6 @@ import simplifier.parser.Parser;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ParserTest {
     @ParameterizedTest

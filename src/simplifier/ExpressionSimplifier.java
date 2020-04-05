@@ -1,6 +1,5 @@
 package simplifier;
 
-import simplifier.exceptions.TypeException;
 import simplifier.expression.*;
 
 import java.util.ArrayList;

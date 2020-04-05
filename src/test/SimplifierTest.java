@@ -4,14 +4,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import simplifier.ChainSimplifier;
-import simplifier.chain.Chain;
 import simplifier.exceptions.SyntaxException;
 import simplifier.exceptions.TypeException;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SimplifierTest {
     private final static String simpleMap = "map{element}";
@@ -60,7 +58,10 @@ public class SimplifierTest {
                                 + "((18*(element*(element*element)))+((28*(element*element))+((3*element)+-32))))}"),
                 Arguments.of("map{((((element*element)*-2121)+33)*((32*(element*element))+1))}"
                         ,"filter{(0=0)}%>%map{((-67872*(element*(element*(element*element))))" +
-                                "+((-1065*(element*element))+33))}")
+                                "+((-1065*(element*element))+33))}"),
+                Arguments.of("filter{(((element*element)=element)|(element=0))}%>%map{(element+100)}" +
+                        "%>%filter{(element>1)}", "filter{(((((element*element)+(-1*element))=0)|" +
+                        "(element=0))&((element+99)>0))}%>%map{(element+100)}")
 
         );
     }

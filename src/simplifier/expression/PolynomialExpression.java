@@ -1,7 +1,5 @@
 package simplifier.expression;
 
-import simplifier.exceptions.TypeException;
-
 import java.util.*;
 import java.util.stream.Collectors;
 

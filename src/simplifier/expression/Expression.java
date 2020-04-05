@@ -1,9 +1,6 @@
 package simplifier.expression;
 
-import simplifier.exceptions.TypeException;
-
 import java.lang.reflect.Type;
-import java.util.Objects;
 
 public abstract class Expression {
     protected Type returnedType;
