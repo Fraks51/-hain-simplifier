@@ -33,7 +33,7 @@ public class BinaryExpression extends Expression {
     }
 
     /**
-     * Check types for operation.
+     * Check types for operation's operands.
      *
      * @throws TypeException If types of left expression or right expression incorrect for operation
      */

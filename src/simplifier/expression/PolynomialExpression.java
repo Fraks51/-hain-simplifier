@@ -17,13 +17,26 @@ public class PolynomialExpression extends Expression {
         return currentExpression;
     }
 
+    /**
+     * Create a polynomial by max degree and parameters
+     *
+     * @param n max degree in polynomial
+     * @param degreesParams parameters
+     */
     public PolynomialExpression(int n, List<Integer> degreesParams) {
+        super();
         this.degreesParams = degreesParams;
         maxDegree = n;
         returnedType = Integer.TYPE;
     }
 
-    public PolynomialExpression add(PolynomialExpression polynomialExpression) throws TypeException {
+    /**
+     * To sum 2 this and given {@link PolynomialExpression}
+     *
+     * @param polynomialExpression target to summation
+     * @return summation result
+     */
+    public PolynomialExpression add(PolynomialExpression polynomialExpression) {
         int maximum = Math.max(maxDegree, polynomialExpression.maxDegree);
         int minimum = Math.min(maxDegree, polynomialExpression.maxDegree);
         List<Integer> newDegreesParams = new ArrayList<>(Collections.nCopies(maximum + 1, 0));
@@ -41,13 +54,26 @@ public class PolynomialExpression extends Expression {
         return new PolynomialExpression(maximum, newDegreesParams);
     }
 
-    public PolynomialExpression dif(PolynomialExpression polynomialExpression) throws TypeException {
+    /**
+     * To subtract 2 this and given {@link PolynomialExpression}
+     *
+     * @param polynomialExpression target to subtraction
+     * @return subtraction result
+     */
+    public PolynomialExpression dif(PolynomialExpression polynomialExpression) {
         polynomialExpression.degreesParams = polynomialExpression.degreesParams.stream()
                 .map(x -> -x).collect(Collectors.toList());
         return add(polynomialExpression);
     }
 
-    public PolynomialExpression mul(PolynomialExpression polynomialExpression) throws TypeException {
+    /**
+     * To multiply 2 this and given {@link PolynomialExpression}
+     * and return result
+     *
+     * @param polynomialExpression target to multiplication
+     * @return multiplication result
+     */
+    public PolynomialExpression mul(PolynomialExpression polynomialExpression) {
         int newMaxDegree = maxDegree + polynomialExpression.maxDegree;
         List<Integer> newDegreesParams = new ArrayList<>(Collections.nCopies(newMaxDegree + 1, 0));
         for (int i = 0; i <= maxDegree; i++) {
@@ -118,6 +144,11 @@ public class PolynomialExpression extends Expression {
                 degreesParams.equals(that.degreesParams);
     }
 
+    /**
+     * Get constant from polynomial
+     *
+     * @return constant
+     */
     public int getConstParameter() {
         return degreesParams.get(0);
     }

@@ -21,7 +21,7 @@ public class ExpressionSimplifier {
     );
 
 
-    private static PolynomialExpression arithmeticSimplify(Expression expression) throws TypeException {
+    private static PolynomialExpression arithmeticSimplify(Expression expression) {
         if (expression instanceof BinaryExpression) {
             BinaryExpression binaryExpression = (BinaryExpression) expression;
             PolynomialExpression leftSimpleExpression = arithmeticSimplify(binaryExpression.getLeftOperand());
@@ -36,9 +36,6 @@ public class ExpressionSimplifier {
             }
         }
         int elemCheckResult = expression instanceof ElementExpression ? 1 : 0;
-        if (expression.getElement() != null && elemCheckResult == 1) {
-            return arithmeticSimplify(expression.getElement());
-        }
         List<Integer> params = new ArrayList<>();
         params.add(expression instanceof ConstExpression ? ((ConstExpression) expression).getNumber() : 0);
         if (elemCheckResult == 1) {
@@ -74,10 +71,9 @@ public class ExpressionSimplifier {
      * Try to simplify expression
      *
      * @param expression target to simplify
-     * @return simplified expression
-     * @throws TypeException
+     * @return simplified expression equivalent incoming expression
      */
-    public static Expression simplify(Expression expression) throws TypeException {
+    public static Expression simplify(Expression expression) {
         if (expression instanceof BinaryExpression) {
             Operation operation = ((BinaryExpression) expression).getOperation();
             if (operation == Operation.DIF || operation == Operation.SUM || operation == Operation.MUL) {

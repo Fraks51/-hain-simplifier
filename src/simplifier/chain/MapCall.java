@@ -4,7 +4,6 @@ import simplifier.expression.Expression;
 
 final public class MapCall extends Call {
 
-
     /**
      * Map call"s constructor
      *

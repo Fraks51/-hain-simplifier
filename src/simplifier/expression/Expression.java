@@ -6,29 +6,47 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 public abstract class Expression {
-    protected Expression element;
     protected Type returnedType;
 
-    protected Expression() {
-        element = null;
-    }
+    /**
+     * Create empty expression
+     */
+    protected Expression() { }
 
+    /**
+     * Get the return type of an expression.
+     * @return return type of an expression
+     */
     public Type getReturnedType() {
         return returnedType;
     }
 
+    /**
+     * Replace all elements with the given expression and return a new expression
+     *
+     * @param expression target to re
+     * @return new {@link Expression}
+     */
     public abstract Expression apply(Expression expression);
 
-    public Expression concat(Expression expression) throws TypeException {
+    /**
+     * Logic join a two boolean expression by Operation.AND
+     * and return this new logic expression
+     * @param expression target to join
+     * @return joined expression
+     */
+    public Expression join(Expression expression) {
         return new BinaryExpression(Operation.AND, this, expression);
     }
-    
+
+    /**
+     * Get expression in string format
+     *
+     * @return expression in string format
+     */
     public abstract String toString();
 
     @Override
     public abstract boolean equals(Object o);
 
-    public Expression getElement() {
-        return element;
-    }
 }

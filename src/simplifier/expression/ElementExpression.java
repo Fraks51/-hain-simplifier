@@ -16,11 +16,7 @@ final public class ElementExpression extends Expression {
     }
 
     public String toString() {
-        if (element == null) {
             return "element";
-        } else  {
-            return element.toString();
-        }
     }
 
     public boolean equals(Object obj) {

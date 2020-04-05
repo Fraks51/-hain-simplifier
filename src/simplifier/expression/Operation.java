@@ -18,12 +18,18 @@ public enum Operation {
     private final Type returnedType;
     private final Type operandsType;
 
-    private Operation(final String stringFormat, final Type returnedType, final Type operandsType) {
+    Operation(final String stringFormat, final Type returnedType, final Type operandsType) {
         this.stringFormat = stringFormat;
         this.returnedType = returnedType;
         this.operandsType = operandsType;
     }
 
+    /**
+     * Get {@link Operation} appropriate given char
+     * @param c target to find {@link Operation}
+     * @return operation by char
+     * @throws SyntaxException if couldn't find operation by char
+     */
     public static Operation fromChar(final char c) throws SyntaxException {
         switch(c) {
             case '>': return BETTER;

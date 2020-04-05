@@ -18,7 +18,7 @@ public abstract class Call {
     }
 
     /**
-     * Return <var>expression</var>
+     * Return call's expression
      *
      * @return expression for this call
      */

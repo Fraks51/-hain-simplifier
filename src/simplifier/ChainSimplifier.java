@@ -46,7 +46,7 @@ public class ChainSimplifier {
         if (!filterExpressions.isEmpty()) {
             Expression expression = filterExpressions.get(0);
             for (int i = 1; i < filterExpressions.size(); i++) {
-                expression = expression.concat(filterExpressions.get(i));
+                expression = expression.join(filterExpressions.get(i));
             }
             newChain.add(new FilterCall(ExpressionSimplifier.simplify(expression)));
         }
