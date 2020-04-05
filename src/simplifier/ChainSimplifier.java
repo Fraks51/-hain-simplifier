@@ -6,6 +6,7 @@ import simplifier.chain.FilterCall;
 import simplifier.chain.MapCall;
 import simplifier.exceptions.SyntaxException;
 import simplifier.exceptions.TypeException;
+import simplifier.expression.ElementExpression;
 import simplifier.expression.Expression;
 import simplifier.parser.Parser;
 
@@ -43,15 +44,18 @@ public class ChainSimplifier {
             }
         }
         Chain newChain = new Chain();
+        Expression expression = ExpressionSimplifier.constTrue;
         if (!filterExpressions.isEmpty()) {
-            Expression expression = filterExpressions.get(0);
+            expression = filterExpressions.get(0);
             for (int i = 1; i < filterExpressions.size(); i++) {
                 expression = expression.join(filterExpressions.get(i));
             }
-            newChain.add(new FilterCall(ExpressionSimplifier.simplify(expression)));
         }
+        newChain.add(new FilterCall(ExpressionSimplifier.simplify(expression)));
         if (mapExpression != null) {
             newChain.add(new MapCall(ExpressionSimplifier.simplify(mapExpression)));
+        } else {
+            newChain.add(new MapCall(new ElementExpression()));
         }
         return newChain;
     }

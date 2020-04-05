@@ -111,11 +111,14 @@ public class Parser {
      * expression in {@link FilterCall} return non boolean value
      */
     public static Chain parseStringToChain(final String inputString) throws SyntaxException, TypeException {
+        Chain chain = new Chain();
+        if (inputString.equals("")) {
+            return chain;
+        }
         if (inputString.matches(".*%>%$")) {
             throw new SyntaxException("Operator '%>%' used on the end of string on nothing");
         } // because split() doesn't split last str like "" if regex is suffix
         String[] calls = inputString.split("%>%");
-        Chain chain = new Chain();
         for (String call : calls) {
             if (call.isEmpty()) {
                 throw new SyntaxException("Operator '%>%' used to empty string");

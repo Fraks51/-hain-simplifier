@@ -24,6 +24,18 @@ public enum Operation {
         this.operandsType = operandsType;
     }
 
+
+    public boolean isComparable() {
+        return stringFormat.equals(">") || stringFormat.equals("<") || stringFormat.equals("=");
+    }
+
+    public boolean isArithmetic() {
+        return stringFormat.equals("*") || stringFormat.equals("-") || stringFormat.equals("+");
+    }
+
+    public boolean isBooleanMath() {
+        return stringFormat.equals("|") || stringFormat.equals("&");
+    }
     /**
      * Get {@link Operation} appropriate given char
      * @param c target to find {@link Operation}

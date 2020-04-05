@@ -90,32 +90,17 @@ public class PolynomialExpression extends Expression {
         for (int i = 1; i <= maxDegree; i++) {
             int param = degreesParams.get(i);
             if (param != 0) {
-                if (param > 0) {
-                    currentExpression = new BinaryExpression(
-                            Operation.SUM,
-                            param == 1 ?
-                                    nDegreeElement(i) :
-                                    new BinaryExpression(
-                                            Operation.MUL,
-                                            new ConstExpression(param),
-                                            nDegreeElement(i)
-                                    ),
-                            currentExpression
-                    );
-                } else {
-                    param = -param;
-                    currentExpression = new BinaryExpression(
-                            Operation.DIF,
-                            param == 1 ?
-                                    nDegreeElement(i) :
-                                    new BinaryExpression(
-                                            Operation.MUL,
-                                            new ConstExpression(param),
-                                            nDegreeElement(i)
-                                    ),
-                            currentExpression
-                    );
-                }
+                currentExpression = new BinaryExpression(
+                        Operation.SUM,
+                        param == 1 ?
+                                nDegreeElement(i) :
+                                new BinaryExpression(
+                                        Operation.MUL,
+                                        new ConstExpression(param),
+                                        nDegreeElement(i)
+                                ),
+                        currentExpression
+                );
             }
         }
         return currentExpression;

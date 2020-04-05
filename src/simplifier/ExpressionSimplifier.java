@@ -8,13 +8,16 @@ import java.util.List;
 
 public class ExpressionSimplifier {
 
-    private static BinaryExpression constFalse = new BinaryExpression(
+    private final static BinaryExpression constFalse = new BinaryExpression(
                         Operation.EQUAL,
                         new PolynomialExpression(0, List.of(1)),
                         new PolynomialExpression(0, List.of(0))
                 );
 
-    private static BinaryExpression constTrue = new BinaryExpression(
+    /**
+     * Always true bool expression
+     */
+    public final static BinaryExpression constTrue = new BinaryExpression(
             Operation.EQUAL,
             new PolynomialExpression(0, List.of(0)),
             new PolynomialExpression(0, List.of(0))
@@ -49,7 +52,7 @@ public class ExpressionSimplifier {
                 || expression.getOperation() == Operation.LESS)
                 && ((PolynomialExpression) expression.getLeftOperand()).getMaxDegree() == 0) {
             if (expression.getOperation() == Operation.EQUAL) {
-                if (expression.getRightOperand().equals(expression.getLeftOperand())) {
+                if (((PolynomialExpression) expression.getLeftOperand()).getConstParameter() == 0) {
                     return 1;
                 } else {
                     return 0;
@@ -67,6 +70,67 @@ public class ExpressionSimplifier {
         return -1;
     }
 
+    private static Expression simplifyBooleanWithEqualsOperation(BinaryExpression leftExpression,
+                                                                       BinaryExpression rightExpression,
+                                                                       Operation global, Operation eq) {
+        final Expression common = leftExpression.getLeftOperand();
+        if (eq.isComparable()) {
+            return leftExpression;
+        }
+        return new BinaryExpression(eq, common,
+                fastAndOrSimplify(
+                        (BinaryExpression) leftExpression.getRightOperand(),
+                        (BinaryExpression) rightExpression.getRightOperand(),
+                        global
+                ));
+    }
+
+    private static Expression fastAndOrSimplify(BinaryExpression leftExpression,
+                                                BinaryExpression rightExpression,
+                                                Operation operation) {
+        int isConstLeft = isBooleanConstant(leftExpression);
+        int isConstRight = isBooleanConstant(rightExpression);
+        if (isConstLeft == 1 && isConstRight == 1) {
+            return constTrue;
+        }
+        if (isConstLeft == 1) {
+            return operation == Operation.AND ? rightExpression : constTrue;
+        }
+        if (isConstRight == 1) {
+            return operation == Operation.AND ? leftExpression : constTrue;
+        }
+        if (isConstLeft == 0 && isConstRight == 0) {
+            return constFalse;
+        }
+        if (isConstLeft == 0) {
+            return operation == Operation.AND ? constFalse : rightExpression;
+        }
+        if (isConstRight == 0) {
+            return operation == Operation.AND ? constFalse : leftExpression;
+        }
+        if (leftExpression.getLeftOperand().equals(rightExpression.getLeftOperand())) {
+            if (leftExpression.getOperation() == rightExpression.getOperation()) {
+                return simplifyBooleanWithEqualsOperation(leftExpression, rightExpression, operation,
+                        leftExpression.getOperation());
+            }
+            if (operation == Operation.AND && leftExpression.getOperation().isComparable()) {
+                return constFalse;
+            }
+        }
+        return new BinaryExpression(operation,
+                leftExpression,
+                rightExpression
+        );
+    }
+
+    private static Expression andOrSimplify(BinaryExpression expression, Operation operation) {
+        BinaryExpression leftExpression = (BinaryExpression)
+                simplify(expression.getLeftOperand());
+        BinaryExpression rightExpression = (BinaryExpression)
+                simplify(expression.getRightOperand());
+        return fastAndOrSimplify(leftExpression, rightExpression, operation);
+    }
+
     /**
      * Try to simplify expression
      *
@@ -76,39 +140,16 @@ public class ExpressionSimplifier {
     public static Expression simplify(Expression expression) {
         if (expression instanceof BinaryExpression) {
             Operation operation = ((BinaryExpression) expression).getOperation();
-            if (operation == Operation.DIF || operation == Operation.SUM || operation == Operation.MUL) {
+            if (operation.isArithmetic()) {
                 return arithmeticSimplify(expression);
             }
-            if (operation == Operation.BETTER || operation == Operation.LESS || operation == Operation.EQUAL) {
+            if (operation.isComparable()) {
                 PolynomialExpression leftExpression = arithmeticSimplify(
                             ((BinaryExpression) expression).getLeftOperand()
                         ).dif(arithmeticSimplify(((BinaryExpression) expression).getRightOperand()));
                 return new BinaryExpression(operation, leftExpression, new ConstExpression(0));
             }
-            if (operation == Operation.AND || operation == Operation.OR) {
-                BinaryExpression leftExpression = (BinaryExpression)
-                        simplify(((BinaryExpression) expression).getLeftOperand());
-                BinaryExpression rightExpression = (BinaryExpression)
-                        simplify(((BinaryExpression) expression).getRightOperand());
-                int isConstLeft = isBooleanConstant(leftExpression);
-                int isConstRight = isBooleanConstant(rightExpression);
-                if (isConstLeft == 1) {
-                    return operation == Operation.AND ? rightExpression : constTrue;
-                }
-                if (isConstRight == 1) {
-                    return operation == Operation.AND ? leftExpression : constTrue;
-                }
-                if (isConstLeft == 0) {
-                    return operation == Operation.AND ? constFalse : rightExpression;
-                }
-                if (isConstRight == 0) {
-                    return operation == Operation.AND ? constFalse : leftExpression;
-                }
-            }
-            return new BinaryExpression(operation,
-                    simplify(((BinaryExpression) expression).getLeftOperand()),
-                    simplify(((BinaryExpression) expression).getRightOperand())
-            );
+            return andOrSimplify((BinaryExpression) expression, operation);
         }
         return expression;
     }
