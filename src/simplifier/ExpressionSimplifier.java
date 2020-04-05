@@ -71,9 +71,10 @@ public class ExpressionSimplifier {
     }
 
     /**
+     * Try to simplify expression
      *
-     * @param expression
-     * @return
+     * @param expression target to simplify
+     * @return simplified expression
      * @throws TypeException
      */
     public static Expression simplify(Expression expression) throws TypeException {
